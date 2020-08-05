@@ -1,10 +1,11 @@
 package main
 
 import (
-	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
 	"os"
 	"os/signal"
-	"time"
 
 	"github.com/0xABAD/gooey"
 )
@@ -13,7 +14,7 @@ const DEBUG = true
 
 func main() {
 	var (
-		app    app
+		app    = app{message: make(chan string)}
 		notify = make(chan os.Signal)
 		done   = make(chan struct{})
 		server = gooey.Server{IndexHtml: INDEX}
@@ -30,21 +31,40 @@ func main() {
 		close(done)
 	}()
 
+	http.HandleFunc("/tree", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			log.Printf("[ERROR] Failed to read request: %s", err)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		app.message <- string(body)
+	})
+	go func() {
+		log.Fatal(http.ListenAndServe(":18900", nil))
+	}()
+
 	server.Start(done, &app)
 }
 
-type app struct{}
+type app struct {
+	message chan string
+}
 
 func (a *app) Start(closed <-chan struct{}, incoming <-chan []byte, outgoing chan<- interface{}) {
-	count := 0
-	ticker := time.NewTicker(1 * time.Second)
 	for {
 		select {
 		case <-closed:
 			return
-		case <-ticker.C:
-			outgoing <- fmt.Sprintf("Message from server.  Count %d", count)
-			count++
+		case msg := <-a.message:
+			outgoing <- msg
 		}
 	}
 }
