@@ -259,22 +259,29 @@
               .join("g")
               .attr("transform", d => `translate(0,${d.index * nodeSize})`);
 
-        node.append("circle")
-            .attr("cx", d => d.depth * nodeSize)
-            .attr("r", 2.5)
-            .attr("fill", d => d.children ? null : "#999");
+        node.each(function(datum) {
+            let node = datum.data;
 
-        node.append("text")
-            .attr("dy", "0.32em")
-            .attr("x", d => d.depth * nodeSize + 6)
-            .text(d => d.data.name);
+            d3.select(this)
+                .append("circle")
+                .attr("cx", d => d.depth * nodeSize)
+                .attr("r", 2.5)
+                .attr("fill", d => d.children ? null : "#999");
 
-        node.append("title")
-            .text(d => d
-                  .ancestors()
-                  .reverse()
-                  .map(d => d.data.name)
-                  .join("/"));
+            d3.select(this)
+                .append("text")
+                .attr("dy", "0.32em")
+                .attr("x", d => d.depth * nodeSize + 6)
+                .text(d => d.data.name);
+
+            d3.select(this)
+                .append("title")
+                .text(d => d
+                      .ancestors()
+                      .reverse()
+                      .map(d => d.data.name)
+                      .join("/"));
+        });
     }
 
     render(debugTrees[0]);
