@@ -12,12 +12,12 @@
                 "args": 2,
                 "result": 0,
                 "id": 47,
-                "kids": [
+                "children": [
                     {
                         "type": "fallback",
                         "result": 0,
                         "id": 47,
-                        "kids": [
+                        "children": [
                             {
                                 "type": "condition",
                                 "name": "RoomMaxLevel",
@@ -30,7 +30,7 @@
                                 "type": "sequence",
                                 "result": 0,
                                 "id": 47,
-                                "kids": [
+                                "children": [
                                     {
                                         "type": "condition",
                                         "name": "CarryCreepAvailable",
@@ -43,7 +43,7 @@
                                         "type": "not",
                                         "result": 0,
                                         "id": 47,
-                                        "kids": [
+                                        "children": [
                                             {
                                                 "type": "condition",
                                                 "name": "CreepEnergyFull",
@@ -76,7 +76,7 @@
                                 "type": "sequence",
                                 "result": 0,
                                 "id": 47,
-                                "kids": [
+                                "children": [
                                     {
                                         "type": "condition",
                                         "name": "HaveCreepWithEnergy",
@@ -107,7 +107,7 @@
                                 "type": "sequence",
                                 "result": 0,
                                 "id": 47,
-                                "kids": [
+                                "children": [
                                     {
                                         "type": "condition",
                                         "name": "SpawnEnergyFull",
@@ -132,7 +132,7 @@
                         "type": "fallback",
                         "result": 1,
                         "id": 47,
-                        "kids": [
+                        "children": [
                             {
                                 "type": "condition",
                                 "name": "SpawnEnergyFull",
@@ -145,7 +145,7 @@
                                 "type": "sequence",
                                 "result": 0,
                                 "id": 47,
-                                "kids": [
+                                "children": [
                                     {
                                         "type": "condition",
                                         "name": "SourceHasEnergy",
@@ -166,7 +166,7 @@
                                         "type": "not",
                                         "result": 0,
                                         "id": 47,
-                                        "kids": [
+                                        "children": [
                                             {
                                                 "type": "condition",
                                                 "name": "CreepEnergyFull",
@@ -191,7 +191,7 @@
                                 "type": "sequence",
                                 "result": 1,
                                 "id": 47,
-                                "kids": [
+                                "children": [
                                     {
                                         "type": "condition",
                                         "name": "HaveCreepWithEnergy",
@@ -221,10 +221,69 @@
         // Check we can act on gooey messages.
         let elt = document.getElementById('gooey-message-area');
         elt.innerText = msg;
-
-        // Check d3.js is working.
-        d3.select('#d3-version').text(d3.version);
     };
+
+    function render(obj) {
+        const width = 954;
+
+        let tree = d3.hierarchy(obj.root);
+        tree.dx = 10;
+        tree.dy = width / (tree.height + 1);
+
+        let root = d3.tree().nodeSize([tree.dx, tree.dy])(tree);
+
+        let x0 = Infinity;
+        let x1 = -x0;
+
+        root.each(d => {
+            if (d.x > x1) x1 = d.x;
+            if (d.x < x0) x0 = d.x;
+        });
+
+        const svg = d3.select("#tree-render-area")
+              .html('')
+              .append('svg')
+              .attr("viewBox", [0, 0, width, x1 - x0 + tree.dx * 2]);
+
+        const g = svg.append("g")
+              .attr("font-family", "sans-serif")
+              .attr("font-size", 10)
+              .attr("transform", `translate(${tree.dy / 3},${tree.dx - x0})`);
+
+        const link = g.append("g")
+              .attr("fill", "none")
+              .attr("stroke", "#555")
+              .attr("stroke-opacity", 0.4)
+              .attr("stroke-width", 1.5)
+              .selectAll("path")
+              .data(root.links())
+              .join("path")
+              .attr("d", d3.linkHorizontal()
+                    .x(d => d.y)
+                    .y(d => d.x));
+
+        const node = g.append("g")
+              .attr("stroke-linejoin", "round")
+              .attr("stroke-width", 3)
+              .selectAll("g")
+              .data(root.descendants())
+              .join("g")
+              .attr("transform", d => `translate(${d.y},${d.x})`);
+
+        node.append("circle")
+            .attr("fill", d => d.children ? "#555" : "#999")
+            .attr("r", 2.5);
+
+        node.append("text")
+            .attr("dy", "0.31em")
+            .attr("x", d => d.children ? -6 : 6)
+            .attr("text-anchor", d => d.children ? "end" : "start")
+            .text(d => d.data.name)
+            .clone(true).lower()
+            .attr("stroke", "white");
+    }
+
+    render(debugTrees[0]);
 
     // Reset MDL framework in case of hot-reload.
     let header = document.getElementById('main-header');
