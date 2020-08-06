@@ -224,63 +224,57 @@
     };
 
     function render(obj) {
-        const width = 954;
+        const width    = 954,
+              nodeSize = 15;
 
-        let tree = d3.hierarchy(obj.root);
-        tree.dx = 10;
-        tree.dy = width / (tree.height + 1);
+        let index = 0;
+        let root = d3.hierarchy(obj.root)
+            .eachBefore(d => d.index = index++);
 
-        let root = d3.tree().nodeSize([tree.dx, tree.dy])(tree);
-
-        let x0 = Infinity;
-        let x1 = -x0;
-
-        root.each(d => {
-            if (d.x > x1) x1 = d.x;
-            if (d.x < x0) x0 = d.x;
-        });
+        const nodes = root.descendants();
 
         const svg = d3.select("#tree-render-area")
               .html('')
               .append('svg')
-              .attr("viewBox", [0, 0, width, x1 - x0 + tree.dx * 2]);
-
-        const g = svg.append("g")
+              .attr("viewBox", [-nodeSize / 2, -nodeSize * 3 / 2, width, (nodes.length + 1) * nodeSize])
               .attr("font-family", "sans-serif")
               .attr("font-size", 10)
-              .attr("transform", `translate(${tree.dy / 3},${tree.dx - x0})`);
+              .style("overflow", "visible");
 
-        const link = g.append("g")
+        const link = svg.append("g")
               .attr("fill", "none")
-              .attr("stroke", "#555")
-              .attr("stroke-opacity", 0.4)
-              .attr("stroke-width", 1.5)
+              .attr("stroke", "#999")
               .selectAll("path")
               .data(root.links())
               .join("path")
-              .attr("d", d3.linkHorizontal()
-                    .x(d => d.y)
-                    .y(d => d.x));
+              .attr("d", d => `
+        M${d.source.depth * nodeSize},${d.source.index * nodeSize}
+        V${d.target.index * nodeSize}
+        h${nodeSize}
+      `);
 
-        const node = g.append("g")
-              .attr("stroke-linejoin", "round")
-              .attr("stroke-width", 3)
+        const node = svg.append("g")
               .selectAll("g")
-              .data(root.descendants())
+              .data(nodes)
               .join("g")
-              .attr("transform", d => `translate(${d.y},${d.x})`);
+              .attr("transform", d => `translate(0,${d.index * nodeSize})`);
 
         node.append("circle")
-            .attr("fill", d => d.children ? "#555" : "#999")
-            .attr("r", 2.5);
+            .attr("cx", d => d.depth * nodeSize)
+            .attr("r", 2.5)
+            .attr("fill", d => d.children ? null : "#999");
 
         node.append("text")
-            .attr("dy", "0.31em")
-            .attr("x", d => d.children ? -6 : 6)
-            .attr("text-anchor", d => d.children ? "end" : "start")
-            .text(d => d.data.name)
-            .clone(true).lower()
-            .attr("stroke", "white");
+            .attr("dy", "0.32em")
+            .attr("x", d => d.depth * nodeSize + 6)
+            .text(d => d.data.name);
+
+        node.append("title")
+            .text(d => d
+                  .ancestors()
+                  .reverse()
+                  .map(d => d.data.name)
+                  .join("/"));
     }
 
     render(debugTrees[0]);
