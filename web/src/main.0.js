@@ -9,7 +9,7 @@
             "max_arg_length": 24,
             "long_arg_trunc": 6,
             "root": {
-                "name": "⇉",
+                "name": "⇶",
                 "result": 0,
                 "args": [2],
                 "id": 47,
