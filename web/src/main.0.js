@@ -213,11 +213,11 @@
     };
 
     function display(tree) {
-        let svg = render(tree);
+        let svg  = render(tree),
+            area = d3.select("#tree-render-area").html('');
 
-        d3.select("#tree-render-area")
-            .html('')
-            .append(() => svg.node());
+        area.append('div').text(tree.name);
+        area.append(() => svg.node());
     }
 
     display(debugTrees[0]);
@@ -274,7 +274,7 @@
         const nodes = root.descendants();
 
         const svg = d3.create('svg')
-              .attr("viewBox", [-NODE_SIZE / 2, -NODE_SIZE * 3 / 2, WIDTH, (nodes.length + 1) * NODE_SIZE])
+              .attr("viewBox", [-NODE_SIZE / 2, -NODE_SIZE / 2, WIDTH, (nodes.length + 1) * NODE_SIZE])
               .attr("font-family", "sans-serif")
               .attr("font-size", 10)
               .style("overflow", "visible");
