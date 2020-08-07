@@ -6,7 +6,7 @@
             "args": ["sim"],
             "id": 47,
             "result": 0,
-            "long_arg_length": 24,
+            "max_arg_length": 24,
             "long_arg_trunc": 6,
             "root": {
                 "name": "⇉",
@@ -252,7 +252,7 @@
         const CURR_ID         = obj.root.id,
               NODE_SIZE       = 18,
               NIL_COLOR       = "#999",
-              LONG_ARG_LENGTH = obj.long_arg_length,
+              MAX_ARG_LENGTH  = obj.max_arg_length,
               LONG_ARG_TRUNC  = obj.long_arg_trunc,
               WIDTH           = 1200;
 
@@ -374,7 +374,7 @@
                             if (node.id == CURR_ID) {
                                 for (let arg of node.args) {
                                     let a = arg;
-                                    if (arg.length == LONG_ARG_LENGTH) {
+                                    if (arg.length >= MAX_ARG_LENGTH) {
                                         a = arg.substring(0, LONG_ARG_TRUNC);
                                     }
                                     name += a + ' ';
