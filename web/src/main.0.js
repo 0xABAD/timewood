@@ -1,52 +1,50 @@
 (function() {
     const debugTrees = [
         {
-            "type": "root",
             "name": "gather",
             "params": ["*room"],
             "args": ["sim"],
             "id": 47,
             "result": 0,
+            "long_arg_length": 24,
+            "long_arg_trunc": 6,
             "root": {
-                "type": "parallel",
-                "args": 2,
+                "name": "⇉",
                 "result": 0,
+                "args": [2],
                 "id": 47,
                 "children": [
                     {
-                        "type": "fallback",
+                        "name": "?",
                         "result": 0,
                         "id": 47,
                         "children": [
                             {
-                                "type": "condition",
-                                "name": "RoomMaxLevel",
+                                "name": "Room Max Level",
                                 "params": ["*room"],
                                 "args": ["sim"],
                                 "result": 0,
                                 "id": 47
                             },
                             {
-                                "type": "sequence",
+                                "name": "➝",
                                 "result": 0,
                                 "id": 47,
                                 "children": [
                                     {
-                                        "type": "condition",
-                                        "name": "CarryCreepAvailable",
+                                        "name": "Carry Creep Available",
                                         "params": ["?creep", "*room"],
                                         "args": ["76d162e718c9f1ab51413dfc", "sim"],
                                         "result": 1,
                                         "id": 47
                                     },
                                     {
-                                        "type": "not",
+                                        "name": "!",
                                         "result": 0,
                                         "id": 47,
                                         "children": [
                                             {
-                                                "type": "condition",
-                                                "name": "CreepEnergyFull",
+                                                "name": "Creep Energy Full",
                                                 "params": ["*creep"],
                                                 "args": ["76d162e718c9f1ab51413dfc"],
                                                 "result": 1,
@@ -55,121 +53,113 @@
                                         ]
                                     },
                                     {
-                                        "type": "condition",
-                                        "name": "SpawnEnergyNearFull",
+                                        "name": "Spawn Energy Near Full",
                                         "params": ["?spawn"],
                                         "args": ["?spawn"],
                                         "result": -1,
                                         "id": -1
                                     },
                                     {
-                                        "type": "action",
-                                        "name": "CreepCollectEnergy",
+                                        "name": "Creep Collect Energy",
                                         "params": ["*creep", "*spawn"],
                                         "args": ["*creep", "*spawn"],
                                         "result": -1,
-                                        "id": -1
+                                        "id": -1,
+                                        "isAction": true
                                     }
                                 ]
                             },
                             {
-                                "type": "sequence",
+                                "name": "➝",
                                 "result": 0,
                                 "id": 47,
                                 "children": [
                                     {
-                                        "type": "condition",
-                                        "name": "HaveCreepWithEnergy",
+                                        "name": "Have Creep With Energy",
                                         "params": ["?creep", "*room"],
                                         "args": ["76d162e718c9f1ab51413dfc", "sim"],
                                         "result": 1,
                                         "id": 47
                                     },
                                     {
-                                        "type": "condition",
-                                        "name": "SpawnEnergyNearFull",
+                                        "name": "Spawn Energy Near Full",
                                         "params": ["?spawn", "*room"],
                                         "args": ["988056402dad25aba66e5af5", "sim"],
                                         "result": 0,
                                         "id": 47
                                     },
                                     {
-                                        "type": "action",
-                                        "name": "UpgradeRoom",
+                                        "name": "Upgrade Room",
                                         "params": ["*creep", "*room"],
                                         "args": ["*creep", "*room"],
                                         "result": -1,
-                                        "id": -1
+                                        "id": -1,
+                                        "isAction": true
                                     }
                                 ]
                             },
                             {
-                                "type": "sequence",
+                                "name": "➝",
                                 "result": 0,
                                 "id": 47,
                                 "children": [
                                     {
-                                        "type": "condition",
-                                        "name": "SpawnEnergyFull",
+                                        "name": "Spawn Energy Full",
                                         "params": ["?spawn", "*room"],
                                         "args": ["988056402dad25aba66e5af5", "sim"],
                                         "result": 0,
                                         "id": 47
                                     },
                                     {
-                                        "type": "action",
-                                        "name": "BuildCreep",
+                                        "name": "Build Creep",
                                         "params": ["*spawn"],
                                         "args": ["*spawn"],
                                         "result": -1,
-                                        "id": -1
+                                        "id": -1,
+                                        "isAction": true
                                     }
                                 ]
                             }
                         ]
                     },
                     {
-                        "type": "fallback",
+                        "name": "?",
                         "result": 1,
                         "id": 47,
                         "children": [
                             {
-                                "type": "condition",
-                                "name": "SpawnEnergyFull",
+                                "name": "Spawn Energy Full",
                                 "params": ["?spawn", "*room"],
                                 "args": ["988056402dad25aba66e5af5", "sim"],
                                 "result": 0,
                                 "id": 47
                             },
                             {
-                                "type": "sequence",
+                                "name": "➝",
                                 "result": 0,
                                 "id": 47,
                                 "children": [
                                     {
-                                        "type": "condition",
-                                        "name": "SourceHasEnergy",
+                                        "name": "Source Has Energy",
                                         "params": ["?source", "*room"],
                                         "args": ["7edd613592480bac57da3d7f", "sim"],
                                         "result": 1,
                                         "id": 47
                                     },
                                     {
-                                        "type": "condition",
-                                        "name": "WorkCreepAvailable",
+                                        "name": "Work Creep Available",
                                         "params": ["?creep", "*room"],
                                         "args": ["76d162e718c9f1ab51413dfc", "sim"],
                                         "result": 1,
                                         "id": 47
                                     },
                                     {
-                                        "type": "not",
+                                        "name": "!",
                                         "result": 0,
                                         "id": 47,
                                         "children": [
                                             {
-                                                "type": "condition",
-                                                "name": "CreepEnergyFull",
+                                                "name": "Creep Energy Full",
                                                 "params": ["*creep"],
                                                 "args": ["76d162e718c9f1ab51413dfc"],
                                                 "result": 1,
@@ -178,35 +168,34 @@
                                         ]
                                     },
                                     {
-                                        "type": "action",
-                                        "name": "HarvestEnergy",
+                                        "name": "Harvest Energy",
                                         "params": ["*creep", "*source"],
                                         "args": ["*creep", "*source"],
                                         "result": -1,
-                                        "id": -1
+                                        "id": -1,
+                                        "isAction": true
                                     }
                                 ]
                             },
                             {
-                                "type": "sequence",
+                                "name": "➝",
                                 "result": 1,
                                 "id": 47,
                                 "children": [
                                     {
-                                        "type": "condition",
-                                        "name": "HaveCreepWithEnergy",
+                                        "name": "Have Creep With Energy",
                                         "params": ["?creep", "*room"],
                                         "args": ["76d162e718c9f1ab51413dfc", "sim"],
                                         "result": 1,
                                         "id": 47
                                     },
                                     {
-                                        "type": "action",
-                                        "name": "TransferEnergyToSpawn",
+                                        "name": "Transfer Energy To Spawn",
                                         "params": ["*creep", "*spawn"],
                                         "args": ["76d162e718c9f1ab51413dfc", "988056402dad25aba66e5af5"],
                                         "result": 1,
-                                        "id": 47
+                                        "id": 47,
+                                        "isAction": true
                                     }
                                 ]
                             }
@@ -223,9 +212,49 @@
         elt.innerText = msg;
     };
 
+    function nodeColors(node, curr_id) {
+        const CURR_ID    = curr_id,
+              FAIL       = 0,
+              SUCCESS    = 1,
+              RUNNING    = 2,
+              FAIL_DARK  = "#A80B00",
+              FAIL_LIGHT = "#F7AEA9",
+              SUC_DARK   = "#007300",
+              SUC_LIGHT  = "#B4DFB4",
+              RUN_DARK   = "#044993",
+              RUN_LIGHT  = "#AEB8EC",
+              NIL_DARK   = "#010101",
+              NIL_LIGHT  = "#FFF";
+
+        let dark  = NIL_DARK,
+            light = NIL_LIGHT;
+
+        if (node.id == CURR_ID) {
+            switch (node.result) {
+            case FAIL:
+                dark  = FAIL_DARK;
+                light = FAIL_LIGHT;
+                break;
+            case SUCCESS:
+                dark  = SUC_DARK;
+                light = SUC_LIGHT;
+                break;
+            case RUNNING:
+                dark  = RUN_DARK;
+                light = RUN_LIGHT;
+                break;
+            }
+        }
+        return [dark, light];
+    }
+
     function render(obj) {
-        const width    = 954,
-              nodeSize = 15;
+        const CURR_ID         = obj.root.id,
+              NODE_SIZE       = 18,
+              NIL_COLOR       = "#999",
+              LONG_ARG_LENGTH = obj.long_arg_length,
+              LONG_ARG_TRUNC  = obj.long_arg_trunc,
+              WIDTH           = 1200;
 
         let index = 0;
         let root = d3.hierarchy(obj.root)
@@ -236,51 +265,145 @@
         const svg = d3.select("#tree-render-area")
               .html('')
               .append('svg')
-              .attr("viewBox", [-nodeSize / 2, -nodeSize * 3 / 2, width, (nodes.length + 1) * nodeSize])
+              .attr("viewBox", [-NODE_SIZE / 2, -NODE_SIZE * 3 / 2, WIDTH, (nodes.length + 1) * NODE_SIZE])
               .attr("font-family", "sans-serif")
               .attr("font-size", 10)
               .style("overflow", "visible");
 
         const link = svg.append("g")
               .attr("fill", "none")
-              .attr("stroke", "#999")
+              .attr("stroke-width", "1.5")
               .selectAll("path")
-              .data(root.links())
+              .data(root.links().reverse())
               .join("path")
+              .attr("stroke", function(datum) {
+                  let node = datum.target.data;
+                  if (node.id != CURR_ID) {
+                      return NIL_COLOR;
+                  }
+                  let [dark, _] = nodeColors(node, CURR_ID);
+                  return dark;
+              })
               .attr("d", d => `
-        M${d.source.depth * nodeSize},${d.source.index * nodeSize}
-        V${d.target.index * nodeSize}
-        h${nodeSize}
+        M${d.source.depth * NODE_SIZE},${d.source.index * NODE_SIZE}
+        V${d.target.index * NODE_SIZE}
+        h${NODE_SIZE}
       `);
 
         const node = svg.append("g")
               .selectAll("g")
               .data(nodes)
               .join("g")
-              .attr("transform", d => `translate(0,${d.index * nodeSize})`);
+              .attr("transform", d => `translate(0,${d.index * NODE_SIZE})`);
 
         node.each(function(datum) {
             let node = datum.data;
 
-            d3.select(this)
-                .append("circle")
-                .attr("cx", d => d.depth * nodeSize)
-                .attr("r", 2.5)
-                .attr("fill", d => d.children ? null : "#999");
+            if (node.children) {
+                let [dark, light] = nodeColors(node, CURR_ID);
 
-            d3.select(this)
-                .append("text")
-                .attr("dy", "0.32em")
-                .attr("x", d => d.depth * nodeSize + 6)
-                .text(d => d.data.name);
+                d3.select(this)
+                    .append("circle")
+                    .attr("cx", d => d.depth * NODE_SIZE)
+                    .attr("r", 7.5)
+                    .attr("stroke", dark)
+                    .attr("stroke-width", "1.2")
+                    .attr("fill", light);
 
-            d3.select(this)
-                .append("title")
-                .text(d => d
-                      .ancestors()
-                      .reverse()
-                      .map(d => d.data.name)
-                      .join("/"));
+                d3.select(this)
+                    .append("text")
+                    .attr("dy", "0.3em")
+                    .attr("x", d => d.depth * NODE_SIZE)
+                    .attr("text-anchor", "middle")
+                    .attr("fill", dark)
+                    .style("font-weight", "bolder")
+                    .style("font-size", "0.85em")
+                    .text(d => d.data.name);
+
+                d3.select(this)
+                    .append("title")
+                    .text(d => d
+                          .ancestors()
+                          .reverse()
+                          .map(d => d.data.name)
+                          .join("/"));
+            } else {
+                let radius = 3.5,
+                    marker = undefined;
+
+                if (node.isAction) {
+                    marker = d3.select(this)
+                        .append("rect")
+                        .attr("x", d => d.depth * NODE_SIZE - radius)
+                        .attr("y", -radius)
+                        .attr("width", 2*radius)
+                        .attr("height", 2*radius);
+                } else {
+                    marker = d3.select(this)
+                        .append("circle")
+                        .attr("cx", d => d.depth * NODE_SIZE)
+                        .attr("r", radius);
+                }
+                marker.attr("fill", function(datum) {
+                    if (node.id != CURR_ID) {
+                        return NIL_COLOR;
+                    }
+                    let [dark, light] = nodeColors(node, CURR_ID);
+                    return dark;
+                });
+
+                d3.select(this)
+                    .append("text")
+                    .attr("dy", "0.32em")
+                    .attr("x", d => d.depth * NODE_SIZE + 6)
+                    .text(d => {
+                        let node = d.data,
+                            name = d.data.name;
+
+                        // Take the name of the node and the arguments if there are
+                        // defined params.  The arguments will be truncated if too
+                        // long.
+                        //
+                        // For example, suppose the name is "Is Near The End" and
+                        // args is ["thing", "room"].  Then the name will be
+                        // "Is Near The End: thing room.  Finally a pair of []
+                        // wraps the name if the node wraps an action otherwise
+                        // it will be wrapped in a pair of ().
+                        if (node.params && node.params.length > 0) {
+                            name += ": ";
+                            if (node.id == CURR_ID) {
+                                for (let arg of node.args) {
+                                    let a = arg;
+                                    if (arg.length == LONG_ARG_LENGTH) {
+                                        a = arg.substring(0, LONG_ARG_TRUNC);
+                                    }
+                                    name += a + ' ';
+                                }
+                            } else {
+                                for (let p of node.params) {
+                                    name += p + ' ';
+                                }
+                            }
+                            // Trim off the last ' ' from the last arg.
+                            name = name.substring(0, name.length - 1);
+                        }
+
+                        if (node.isAction) {
+                            name = '[' + name + ']';
+                        } else {
+                            name = '(' + name + ')';
+                        }
+                        return name;
+                    });
+
+                d3.select(this)
+                    .append("title")
+                    .text(d => d
+                          .ancestors()
+                          .reverse()
+                          .map(d => d.data.name)
+                          .join("/"));
+            }
         });
     }
 
