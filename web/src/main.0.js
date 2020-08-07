@@ -212,6 +212,16 @@
         elt.innerText = msg;
     };
 
+    function display(tree) {
+        let svg = render(tree);
+
+        d3.select("#tree-render-area")
+            .html('')
+            .append(() => svg.node());
+    }
+
+    display(debugTrees[0]);
+
     function nodeColors(node, curr_id) {
         const CURR_ID    = curr_id,
               FAIL       = 0,
@@ -248,23 +258,22 @@
         return [dark, light];
     }
 
-    function render(obj) {
-        const CURR_ID         = obj.root.id,
+    // Render creates and returns a SVG element representing a behavior tree.
+    function render(tree) {
+        const CURR_ID         = tree.root.id,
               NODE_SIZE       = 18,
               NIL_COLOR       = "#999",
-              MAX_ARG_LENGTH  = obj.max_arg_length,
-              LONG_ARG_TRUNC  = obj.long_arg_trunc,
+              MAX_ARG_LENGTH  = tree.max_arg_length,
+              LONG_ARG_TRUNC  = tree.long_arg_trunc,
               WIDTH           = 1200;
 
         let index = 0;
-        let root = d3.hierarchy(obj.root)
+        let root = d3.hierarchy(tree.root)
             .eachBefore(d => d.index = index++);
 
         const nodes = root.descendants();
 
-        const svg = d3.select("#tree-render-area")
-              .html('')
-              .append('svg')
+        const svg = d3.create('svg')
               .attr("viewBox", [-NODE_SIZE / 2, -NODE_SIZE * 3 / 2, WIDTH, (nodes.length + 1) * NODE_SIZE])
               .attr("font-family", "sans-serif")
               .attr("font-size", 10)
@@ -405,9 +414,9 @@
                     return name;
                 });
         });
-    }
 
-    render(debugTrees[0]);
+        return svg;
+    }
 
     // Reset MDL framework in case of hot-reload.
     let header = document.getElementById('main-header');
