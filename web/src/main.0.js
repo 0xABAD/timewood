@@ -320,6 +320,20 @@
                     .style("font-size", "0.85em")
                     .text(d => d.data.name);
 
+                if (node.args && node.args.length > 0) {
+                    let args = "";
+                    for (let arg of node.args) {
+                        args += arg + ' ';
+                    }
+                    d3.select(this)
+                        .append("text")
+                        .attr("dy", "0.3em")
+                        .attr("x", d => d.depth * NODE_SIZE + 10)
+                        .attr("fill", dark)
+                        .style("font-weight", "bolder")
+                        .style("font-size", "0.85em")
+                        .text(args);
+                }
                 return;
             }
 
