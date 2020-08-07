@@ -297,11 +297,57 @@
               .attr("font-size", 10)
               .style("overflow", "visible");
 
+        // The links of the nodes need to be sorted where the target
+        // node that influences the source is rendered last.  This way
+        // it is painted over all the other links going from the target
+        // to the source.
+        //
+        // For example, suppose we have the following tree:
+        //
+        //    ?
+        //    |----(Not Hungry)        == false
+        //    |----(Food Nearby)       == true
+        //    |----(Restaurants Open)  == not evaluated
+        //
+        // Here the fallback node is true since (Food Nearby) is true,
+        // so we want to render that link last so a successful colored
+        // link traces back from (Food Nearby) to the '?'.  The order
+        // the links going from (Not Hungry) and (Restaurants Open) don't
+        // really matter as the lines drawn will be over written from
+        // the link of (Not Hungry).
+        let links = root.links();
+        links.sort(function(a, b) {
+            // Nodes of different depths aren't comparable so order by
+            // lowest to highest depths.  The choice is arbitrary as
+            // it doesn't really matter which are rendered first.
+            if (a.source.depth < b.source.depth) {
+                return -1;
+            }
+            if (a.source.depth > b.source.depth) {
+                return 1;
+            }
+
+            let src_a = a.source.data,
+                tgt_a = a.target.data;
+
+            // If the target was never evaluated then render that first.
+            if (tgt_a.id != CURR_ID) {
+                return -1;
+            }
+            // When the source and target have the same result then we
+            // know that the target influences the source result so it
+            // is rendered last.
+            if (src_a.result == tgt_a.result) {
+                return 1;
+            }
+            return 0;
+        });
+
         const link = svg.append("g")
               .attr("fill", "none")
               .attr("stroke-width", "1.5")
               .selectAll("path")
-              .data(root.links().reverse())
+              .data(links)
               .join("path")
               .attr("stroke", function(datum) {
                   let node = datum.target.data;
