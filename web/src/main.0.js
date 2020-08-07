@@ -206,6 +206,8 @@
         }
     ];
 
+    const TREE_WIDTH = 400;
+
     window.gooey.OnMessage = function(msg) {
         // Check we can act on gooey messages.
         let elt = document.getElementById('gooey-message-area');
@@ -213,11 +215,28 @@
     };
 
     function display(tree) {
-        let svg  = render(tree),
-            area = d3.select("#tree-render-area").html('');
+        let area = d3.select("#tree-render-area")
+            .html('')
+            .style('position', 'absolute')
+            .style('width', TREE_WIDTH + 'px')
+            .style('top', '0px')
+            .style('left', '0px');
 
         area.append('div').text(tree.name);
-        area.append(() => svg.node());
+        area.append(() => render(tree).node());
+
+        area.call(
+            d3.drag()
+                .on("drag", function() {
+                    let evt  = d3.event,
+                        node = area.node(),
+                        top  = parseInt(area.style('top')),
+                        left = parseInt(area.style('left'));
+
+                    area.attr('draggable', true)
+                        .style('top', top + evt.dy + 'px')
+                        .style('left', left + evt.dx + 'px');
+                }));
     }
 
     display(debugTrees[0]);
@@ -260,12 +279,11 @@
 
     // Render creates and returns a SVG element representing a behavior tree.
     function render(tree) {
-        const CURR_ID         = tree.root.id,
-              NODE_SIZE       = 18,
-              NIL_COLOR       = "#999",
-              MAX_ARG_LENGTH  = tree.max_arg_length,
-              LONG_ARG_TRUNC  = tree.long_arg_trunc,
-              WIDTH           = 1200;
+        const CURR_ID        = tree.root.id,
+              NODE_SIZE      = 18,
+              NIL_COLOR      = "#999",
+              MAX_ARG_LENGTH = tree.max_arg_length,
+              LONG_ARG_TRUNC = tree.long_arg_trunc;
 
         let index = 0;
         let root = d3.hierarchy(tree.root)
@@ -274,7 +292,7 @@
         const nodes = root.descendants();
 
         const svg = d3.create('svg')
-              .attr("viewBox", [-NODE_SIZE / 2, -NODE_SIZE / 2, WIDTH, (nodes.length + 1) * NODE_SIZE])
+              .attr("viewBox", [-NODE_SIZE / 2, -NODE_SIZE / 2, TREE_WIDTH, (nodes.length + 1) * NODE_SIZE])
               .attr("font-family", "sans-serif")
               .attr("font-size", 10)
               .style("overflow", "visible");
