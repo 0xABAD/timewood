@@ -320,90 +320,76 @@
                     .style("font-size", "0.85em")
                     .text(d => d.data.name);
 
-                d3.select(this)
-                    .append("title")
-                    .text(d => d
-                          .ancestors()
-                          .reverse()
-                          .map(d => d.data.name)
-                          .join("/"));
-            } else {
-                let radius = 3.5,
-                    marker = undefined;
-
-                if (node.isAction) {
-                    marker = d3.select(this)
-                        .append("rect")
-                        .attr("x", d => d.depth * NODE_SIZE - radius)
-                        .attr("y", -radius)
-                        .attr("width", 2*radius)
-                        .attr("height", 2*radius);
-                } else {
-                    marker = d3.select(this)
-                        .append("circle")
-                        .attr("cx", d => d.depth * NODE_SIZE)
-                        .attr("r", radius);
-                }
-                marker.attr("fill", function(datum) {
-                    if (node.id != CURR_ID) {
-                        return NIL_COLOR;
-                    }
-                    let [dark, light] = nodeColors(node, CURR_ID);
-                    return dark;
-                });
-
-                d3.select(this)
-                    .append("text")
-                    .attr("dy", "0.32em")
-                    .attr("x", d => d.depth * NODE_SIZE + 6)
-                    .text(d => {
-                        let node = d.data,
-                            name = d.data.name;
-
-                        // Take the name of the node and the arguments if there are
-                        // defined params.  The arguments will be truncated if too
-                        // long.
-                        //
-                        // For example, suppose the name is "Is Near The End" and
-                        // args is ["thing", "room"].  Then the name will be
-                        // "Is Near The End: thing room.  Finally a pair of []
-                        // wraps the name if the node wraps an action otherwise
-                        // it will be wrapped in a pair of ().
-                        if (node.params && node.params.length > 0) {
-                            name += ": ";
-                            if (node.id == CURR_ID) {
-                                for (let arg of node.args) {
-                                    let a = arg;
-                                    if (arg.length >= MAX_ARG_LENGTH) {
-                                        a = arg.substring(0, LONG_ARG_TRUNC);
-                                    }
-                                    name += a + ' ';
-                                }
-                            } else {
-                                for (let p of node.params) {
-                                    name += p + ' ';
-                                }
-                            }
-                            // Trim off the last ' ' from the last arg.
-                            name = name.substring(0, name.length - 1);
-                        }
-
-                        if (node.isAction) {
-                            name = '[' + name + ']';
-                        } else {
-                            name = '(' + name + ')';
-                        }
-                        return name;
-                    });
-
-                d3.select(this)
-                    .append("title")
-                    .text(d => d
-                          .ancestors()
-                          .reverse()
-                          .map(d => d.data.name)
-                          .join("/"));
+                return;
             }
+
+            let radius = 3.5,
+                marker = undefined;
+
+            if (node.isAction) {
+                marker = d3.select(this)
+                    .append("rect")
+                    .attr("x", d => d.depth * NODE_SIZE - radius)
+                    .attr("y", -radius)
+                    .attr("width", 2*radius)
+                    .attr("height", 2*radius);
+            } else {
+                marker = d3.select(this)
+                    .append("circle")
+                    .attr("cx", d => d.depth * NODE_SIZE)
+                    .attr("r", radius);
+            }
+            marker.attr("fill", function(datum) {
+                if (node.id != CURR_ID) {
+                    return NIL_COLOR;
+                }
+                let [dark, light] = nodeColors(node, CURR_ID);
+                return dark;
+            });
+
+            d3.select(this)
+                .append("text")
+                .attr("dy", "0.32em")
+                .attr("x", d => d.depth * NODE_SIZE + 6)
+                .text(d => {
+                    let node = d.data,
+                        name = d.data.name;
+
+                    // Take the name of the node and the arguments if there are
+                    // defined params.  The arguments will be truncated if too
+                    // long.
+                    //
+                    // For example, suppose the name is "Is Near The End" and
+                    // args is ["thing", "room"].  Then the name will be
+                    // "Is Near The End: thing room.  Finally a pair of []
+                    // wraps the name if the node wraps an action otherwise
+                    // it will be wrapped in a pair of ().
+                    if (node.params && node.params.length > 0) {
+                        name += ": ";
+                        if (node.id == CURR_ID) {
+                            for (let arg of node.args) {
+                                let a = arg;
+                                if (arg.length >= MAX_ARG_LENGTH) {
+                                    a = arg.substring(0, LONG_ARG_TRUNC);
+                                }
+                                name += a + ' ';
+                            }
+                        } else {
+                            for (let p of node.params) {
+                                name += p + ' ';
+                            }
+                        }
+                        // Trim off the last ' ' from the last arg.
+                        name = name.substring(0, name.length - 1);
+                    }
+
+                    if (node.isAction) {
+                        name = '[' + name + ']';
+                    } else {
+                        name = '(' + name + ')';
+                    }
+                    return name;
+                });
         });
     }
 
