@@ -232,18 +232,18 @@
 
                 let label = entry.append("label")
                     .attr("for", (d, i) => `switch-${i}`)
-                    .classed('mdl-switch mdl-js-switch mdl-js-ripple-effect', true);
+                    .classed("mdl-switch mdl-js-switch mdl-js-ripple-effect", true);
 
-                label.append('input')
-                    .attr('type', 'checkbox')
-                    .attr('id', (d, i) => `switch-${i}`)
-                    .classed('mdl-switch__input', true)
-                    .on('change', function(tree) {
+                label.append("input")
+                    .attr("type", "checkbox")
+                    .attr("id", (d, i) => `switch-${i}`)
+                    .classed("mdl-switch__input", true)
+                    .on("change", function(tree) {
                         if (tree.element) {
                             if (d3.event.target.checked) {
-                                tree.element.style('display', 'block');
+                                tree.element.style("display", "block");
                             } else {
-                                tree.element.style('display', 'none');
+                                tree.element.style("display", "none");
                             }
                         } else {
                             tree.element = createDisplay(tree);
@@ -252,8 +252,8 @@
                         }
                     });
 
-                label.append('span')
-                    .classed('mdl-switch__label', true)
+                label.append("span")
+                    .classed("mdl-switch__label", true)
                     .text(d => treeName(d));
 
                 // Force the material library to call the JS on all label
