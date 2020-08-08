@@ -10,6 +10,9 @@ const INDEX = `
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-light_blue.min.css" />
 <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+<style>
+  .mdl-layout__drawer.is-visible { width: 35vw; }
+</style>
 <script>
 (function(){var e=window.location.origin.substring(7),d=new WebSocket("ws://"+e+"/gooeywebsocket"),a=void 0;window.hasOwnProperty("gooey")?a=window.gooey:(a={},window.gooey=a,a.OnMessage=function(a){console.log(a)},a.Send=function(a){1===d.readyState?d.send(JSON.stringify(a)):console.error("[GOOEY] Websocket connection is not open.")},a.IsDisconnected=!1,a.OnOpen=function(){console.log("[GOOEY] Websocket connection is open.")},a.OnDisconnect=function(){console.error("[GOOEY] Disconnected from server.")},
 a.OpenNewTab=function(){var a=new XMLHttpRequest;a.open("GET",window.location+"gooeynewtab",!0);a.send()});var f=window.setInterval(function(){3===d.readyState&&(window.clearInterval(f),a.IsDisconnected=!0,a.OnDisconnect())},1500);d.addEventListener("open",function(){a.IsDisconnected=!1;a.OnOpen()});d.addEventListener("message",function(d){var b=JSON.parse(d.data);if(b.hasOwnProperty("GooeyMessage")&&b.hasOwnProperty("GooeyContent")&&"gooey-server-reload-content"===b.GooeyMessage){d=function(a){var b=

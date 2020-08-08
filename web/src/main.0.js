@@ -214,7 +214,76 @@
         elt.innerText = msg;
     };
 
-    function display(tree) {
+    setupTrees(debugTrees);
+    createDisplay(debugTrees[0]);
+
+    function setupTrees(trees) {
+        let nav = d3.select("#tree-selection")
+            .selectAll("a")
+            .data(trees)
+            .join(enter => {
+                let entry = enter.append("a")
+                    .classed("mdl-navigation__link", true);
+
+                let label = entry.append("label")
+                    .attr("for", (d, i) => `switch-${i}`)
+                    .classed('mdl-switch mdl-js-switch mdl-js-ripple-effect', true);
+
+                label.append('input')
+                    .attr('type', 'checkbox')
+                    .attr('id', (d, i) => `switch-${i}`)
+                    .classed('mdl-switch__input', true)
+                    .on('change', function(d) {
+                        console.log(d);
+                    });
+
+                label.append('span')
+                    .classed('mdl-switch__label', true)
+                    .text(d => treeName(d));
+
+                // Force the material library to call the JS on all label
+                // elements; otherwise, if loading a new tree the switches will
+                // appear as checkboxes.
+                componentHandler.upgradeElement(label.node());
+
+                return entry;
+            });
+    }
+
+    // TreeName returns the name of the tree with it's args or params
+    // if it has any.  Arguments will be truncated if the tree has the
+    // properties max_arg_length and long_arg_trunc.
+    function treeName(tree) {
+        let arr = tree.params;
+        if (tree.args && tree.args.length > 0) {
+            arr = tree.args;
+        }
+        if (arr && arr.length > 0) {
+            let name = tree.name + ":";
+            for (let a of arr) {
+                name += " " + truncName(a, tree.max_arg_length, tree.long_arg_trunc);
+            }
+            return name;
+        }
+        return tree.name;
+    }
+
+    // TruncName truncates name to truncAmount if both maxLength
+    // and truncAmount are defined and name is greater than or
+    // equal to maxLength.
+    function truncName(name, maxLength, truncAmount) {
+        if (maxLength && truncAmount) {
+            if (name.length >= maxLength) {
+                return name.substring(0, truncAmount);
+            }
+        }
+        return name;
+    }
+
+    // CreateDisplay creates a DOM container and an SVG rendering for
+    // tree.  Drag and zoom handlers are attached to the created DOM
+    // element.
+    function createDisplay(tree) {
         let area = d3.select("#tree-render-area")
             .html("")
             .style("position", "absolute")
@@ -224,20 +293,7 @@
             .attr('scaling', 1.0);
 
         area.append("div")
-            .text(() => {
-                let arr = tree.params;
-                if (tree.args && tree.args.length > 0) {
-                    arr = tree.args;
-                }
-                if (arr && arr.length > 0) {
-                    let name = tree.name + ":";
-                    for (let a of arr) {
-                        name += " " + a;
-                    }
-                    return name;
-                }
-                return tree.name;
-            });
+            .text(treeName(tree));
 
         area.append(() => render(tree).node());
 
@@ -273,8 +329,9 @@
 
     }
 
-    display(debugTrees[0]);
-
+    // NodeColors returns dark and light colors in an array.  The
+    // colors are determined by the value of id from node and its
+    // result.
     function nodeColors(node, curr_id) {
         const CURR_ID    = curr_id,
               FAIL       = 0,
@@ -489,10 +546,7 @@
                         name += ": ";
                         if (node.id == CURR_ID) {
                             for (let arg of node.args) {
-                                let a = arg;
-                                if (arg.length >= MAX_ARG_LENGTH) {
-                                    a = arg.substring(0, LONG_ARG_TRUNC);
-                                }
+                                let a = truncName(arg, MAX_ARG_LENGTH, LONG_ARG_TRUNC);
                                 name += a + ' ';
                             }
                         } else {
