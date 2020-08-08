@@ -214,6 +214,9 @@
         elt.innerText = msg;
     };
 
+    debugTrees.push(JSON.parse(JSON.stringify(debugTrees[0])));
+    debugTrees.push(JSON.parse(JSON.stringify(debugTrees[0])));
+
     setupTrees(debugTrees);
 
     function setupTrees(trees) {
@@ -253,7 +256,9 @@
                 // Force the material library to call the JS on all label
                 // elements; otherwise, if loading a new tree the switches will
                 // appear as checkboxes.
-                componentHandler.upgradeElement(label.node());
+                label.each(function() {
+                    componentHandler.upgradeElement(d3.select(this).node());
+                });
 
                 return entry;
             });
