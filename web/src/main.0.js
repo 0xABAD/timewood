@@ -219,8 +219,11 @@
 
     setupTrees(debugTrees);
 
+    // SetupTrees resets the tree toggle panel to allow the given trees
+    // be togglable for visualization.
     function setupTrees(trees) {
         let nav = d3.select("#tree-selection")
+            .html('')
             .selectAll("a")
             .data(trees)
             .join(enter => {
