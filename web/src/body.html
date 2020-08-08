@@ -1,11 +1,27 @@
 <!-- Always shows a header, even in smaller screens. -->
 <div id="main-header" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="mdl-layout__header">
-    <div class="mdl-layout__header-row">
+    <div class="mdl-layout__header-row" style="justify-content: space-between">
       <!-- Title -->
-      <span class="mdl-layout-title">Timewood</span>
-      <!-- Add spacer, to align navigation to the right -->
-      <div class="mdl-layout-spacer"></div>
+      <span class="mdl-layout-title" style="width: 100px">Timewood</span>
+
+      <!-- Control Button Panel -->
+      <div>
+        <button id="button_previous" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+          <i class="material-icons">skip_previous</i>
+        </button>
+        <button id="button_play" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" style="display: none">
+          <i class="material-icons">play_arrow</i>
+        </button>
+        <button id="button_pause" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+          <i class="material-icons">pause</i>
+        </button>
+        <button id="button_next" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+          <i class="material-icons">skip_next</i>
+        </button>
+      </div>
+
+      <span style="width: 200px"></span>
     </div>
   </header>
   <div class="mdl-layout__drawer" style="mdl-layout__drawer.is-visible{ width: 350px }">
