@@ -206,7 +206,37 @@
         }
     ];
 
-    const TREE_WIDTH = 400;
+    const TREE_WIDTH           = 400,
+          MAX_RING_BUFFER_SIZE = 10;
+
+    let ActiveRingBuffer = [],
+        ActiveRingIndex  = 0,
+        PausedRingBuffer = [],
+        PausedRingIndex  = 0;
+
+    d3.select("#button_previous")
+        .on("click", function() {
+            showPlayButton();
+            console.log("previous");
+        });
+
+    d3.select("#button_next")
+        .on("click", function() {
+            showPlayButton();
+            console.log("next");
+        });
+
+    d3.select("#button_play")
+        .on("click", function() {
+            showPauseButton();
+            console.log("play");
+        });
+
+    d3.select("#button_pause")
+        .on("click", function() {
+            showPlayButton();
+            console.log("pause");
+        });
 
     window.gooey.OnMessage = function(msg) {
         // Check we can act on gooey messages.
@@ -218,6 +248,22 @@
     debugTrees.push(JSON.parse(JSON.stringify(debugTrees[0])));
 
     setupTrees(debugTrees);
+
+    // ShowPlayButton makes the play button visible while hiding the pause button.
+    function showPlayButton() {
+        d3.select("#button_pause")
+            .style("display", "none");
+        d3.select("#button_play")
+            .style("display", "inline-block");
+    }
+
+    // ShowPauseButton makes the pause button visible while hiding the play button.
+    function showPauseButton() {
+        d3.select("#button_play")
+            .style("display", "none");
+        d3.select("#button_pause")
+            .style("display", "inline-block");
+    }
 
     // SetupTrees resets the tree toggle panel to allow the given trees
     // be togglable for visualization.
