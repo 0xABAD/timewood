@@ -216,27 +216,46 @@
 
     function display(tree) {
         let area = d3.select("#tree-render-area")
-            .html('')
-            .style('position', 'absolute')
-            .style('width', TREE_WIDTH + 'px')
-            .style('top', '0px')
-            .style('left', '0px');
+            .html("")
+            .style("position", "absolute")
+            .style("width", TREE_WIDTH + "px")
+            .style("top", "0px")
+            .style("left", "0px")
+            .attr('scaling', 1.0);
 
-        area.append('div').text(tree.name);
+        area.append("div").text(tree.name);
         area.append(() => render(tree).node());
 
+        // Allow the tree to be panned around the display.
         area.call(
             d3.drag()
                 .on("drag", function() {
                     let evt  = d3.event,
                         node = area.node(),
-                        top  = parseInt(area.style('top')),
-                        left = parseInt(area.style('left'));
+                        top  = parseInt(area.style("top")),
+                        left = parseInt(area.style("left"));
 
-                    area.attr('draggable', true)
-                        .style('top', top + evt.dy + 'px')
-                        .style('left', left + evt.dx + 'px');
+                    area.attr("draggable", true)
+                        .style("top", top + evt.dy + "px")
+                        .style("left", left + evt.dx + "px");
                 }));
+
+        // Enlarge or shrink the tree if mouse wheel is scrolled
+        // while holding the shift key.
+        area.on("wheel", function() {
+            let evt = d3.event;
+            if (!evt.shiftKey) {
+                return;
+            }
+
+            let dy   = evt.deltaY / 100,
+                s    = parseFloat(area.attr('scaling')),
+                next = s + dy;
+
+            area.attr('scaling', next)
+                .style('transform', `scale(${next}`);
+        });
+
     }
 
     display(debugTrees[0]);
