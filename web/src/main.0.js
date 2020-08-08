@@ -215,7 +215,10 @@
     };
 
     setupTrees(debugTrees);
-    createDisplay(debugTrees[0]);
+
+    let area = d3.select("#tree-render-area")
+        .html("")
+        .append(() => createDisplay(debugTrees[0]));
 
     function setupTrees(trees) {
         let nav = d3.select("#tree-selection")
@@ -284,8 +287,7 @@
     // tree.  Drag and zoom handlers are attached to the created DOM
     // element.
     function createDisplay(tree) {
-        let area = d3.select("#tree-render-area")
-            .html("")
+        let area = d3.select(document.createElement("div"))
             .style("position", "absolute")
             .style("width", TREE_WIDTH + "px")
             .style("top", "0px")
@@ -327,6 +329,7 @@
                 .style('transform', `scale(${next}`);
         });
 
+        return area.node();
     }
 
     // NodeColors returns dark and light colors in an array.  The
