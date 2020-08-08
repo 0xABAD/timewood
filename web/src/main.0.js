@@ -223,7 +223,22 @@
             .style("left", "0px")
             .attr('scaling', 1.0);
 
-        area.append("div").text(tree.name);
+        area.append("div")
+            .text(() => {
+                let arr = tree.params;
+                if (tree.args && tree.args.length > 0) {
+                    arr = tree.args;
+                }
+                if (arr && arr.length > 0) {
+                    let name = tree.name + ":";
+                    for (let a of arr) {
+                        name += " " + a;
+                    }
+                    return name;
+                }
+                return tree.name;
+            });
+
         area.append(() => render(tree).node());
 
         // Allow the tree to be panned around the display.
