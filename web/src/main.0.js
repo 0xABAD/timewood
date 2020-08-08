@@ -216,10 +216,6 @@
 
     setupTrees(debugTrees);
 
-    let area = d3.select("#tree-render-area")
-        .html("")
-        .append(() => createDisplay(debugTrees[0]));
-
     function setupTrees(trees) {
         let nav = d3.select("#tree-selection")
             .selectAll("a")
@@ -236,8 +232,18 @@
                     .attr('type', 'checkbox')
                     .attr('id', (d, i) => `switch-${i}`)
                     .classed('mdl-switch__input', true)
-                    .on('change', function(d) {
-                        console.log(d);
+                    .on('change', function(tree) {
+                        if (tree.element) {
+                            if (d3.event.target.checked) {
+                                tree.element.style('display', 'block');
+                            } else {
+                                tree.element.style('display', 'none');
+                            }
+                        } else {
+                            tree.element = createDisplay(tree);
+                            d3.select("#tree-render-area")
+                                .append(() => tree.element.node());
+                        }
                     });
 
                 label.append('span')
@@ -329,7 +335,7 @@
                 .style('transform', `scale(${next}`);
         });
 
-        return area.node();
+        return area;
     }
 
     // NodeColors returns dark and light colors in an array.  The
