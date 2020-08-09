@@ -207,35 +207,75 @@
     ];
 
     const TREE_WIDTH           = 400,
-          MAX_RING_BUFFER_SIZE = 10;
+          MAX_RING_BUFFER_SIZE = 3;
 
-    let ActiveRingBuffer = [],
-        ActiveRingIndex  = 0,
-        PausedRingBuffer = [],
-        PausedRingIndex  = 0;
+    let ActiveBuffer = [],
+        PausedBuffer = [],
+        PausedIndex  = -1,
+        IsPaused     = false;
+
+    debugTrees.push(JSON.parse(JSON.stringify(debugTrees[0])));
+    debugTrees.push(JSON.parse(JSON.stringify(debugTrees[0])));
+
+    ActiveBuffer.push(JSON.parse(JSON.stringify(debugTrees)));
+    ActiveBuffer.push(JSON.parse(JSON.stringify(debugTrees)));
+    ActiveBuffer.push(JSON.parse(JSON.stringify(debugTrees)));
+
+    setupTrees(ActiveBuffer[2]);
 
     d3.select("#button_previous")
         .on("click", function() {
-            showPlayButton();
-            console.log("previous");
+            if (!IsPaused) {
+                pause();
+                togglePlayPause();
+            }
+            if (PausedIndex > 0) {
+                let prev = PausedBuffer[PausedIndex];
+                PausedIndex--;
+                copyView(prev, PausedBuffer[PausedIndex]);
+                setupTrees(PausedBuffer[PausedIndex]);
+                console.log(`[PREV] Viewing tree ${PausedIndex + 1} of ${PausedBuffer.length}`);
+            }
         });
 
     d3.select("#button_next")
         .on("click", function() {
-            showPlayButton();
-            console.log("next");
+            if (!IsPaused) {
+                pause();
+                togglePlayPause();
+            }
+            if (PausedIndex < PausedBuffer.length - 1) {
+                let prev = PausedBuffer[PausedIndex];
+                PausedIndex++;
+                copyView(prev, PausedBuffer[PausedIndex]);
+                setupTrees(PausedBuffer[PausedIndex]);
+                console.log(`[NEXT] Viewing tree ${PausedIndex + 1} of ${PausedBuffer.length}`);
+            }
         });
 
     d3.select("#button_play")
         .on("click", function() {
-            showPauseButton();
-            console.log("play");
+            let prev = undefined;
+            if (PausedIndex > -1) {
+                prev = PausedBuffer[PausedIndex];
+            }
+            play();
+            togglePlayPause();
+            if (ActiveBuffer.length > 0) {
+                let curr = ActiveBuffer[ActiveBuffer.length - 1];
+                if (prev) {
+                    copyView(prev, curr);
+                }
+                setupTrees(curr);
+                console.log(`[PLAY] Viewing tree ${ActiveBuffer.length - 1} of ${ActiveBuffer.length}`);
+            }
         });
 
     d3.select("#button_pause")
         .on("click", function() {
-            showPlayButton();
-            console.log("pause");
+            pause();
+            togglePlayPause();
+            console.log(`[PAUSE] Viewing tree ${PausedIndex + 1} of ${PausedBuffer.length}`);
         });
 
     window.gooey.OnMessage = function(msg) {
@@ -244,25 +284,91 @@
         elt.innerText = msg;
     };
 
-    debugTrees.push(JSON.parse(JSON.stringify(debugTrees[0])));
-    debugTrees.push(JSON.parse(JSON.stringify(debugTrees[0])));
+    // CopyView copies over the user interaction visual changes
+    // (e.g. panning and zooming) and whether certain trees are
+    // visible from fromTrees over toTrees.  For a tree to be
+    // copied over it must that same name, parameters, and arguments
+    // for the tree.  This equality doesn't apply to any of the
+    // trees nodes or other properties.
+    function copyView(fromTrees, toTrees) {
 
-    setupTrees(debugTrees);
+        // Helper function to see if two arrays are equal.
+        function arraysMatch(left, right) {
+            if (left && right) {
+                if (left.length != right.length) {
+                    return false;
+                }
+                for (let i = 0; i < left; i++) {
+                    if (left[i] != right[i]) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
 
-    // ShowPlayButton makes the play button visible while hiding the pause button.
-    function showPlayButton() {
-        d3.select("#button_pause")
-            .style("display", "none");
-        d3.select("#button_play")
-            .style("display", "inline-block");
+        for (let i = 0; i < fromTrees.length; i++) {
+            let from = fromTrees[i],
+                to    = toTrees[i];
+
+            if (!from.element)                        continue;
+            if (from.name != to.name)                 continue;
+            if (!arraysMatch(from.params, to.params)) continue;
+            if (!arraysMatch(from.args, to.args))     continue;
+
+            if (!to.element) {
+                to.element = createDisplay(to);
+            }
+
+            let scaling = from.element.attr("scaling");
+            to.element
+                .style("display", from.element.style("display"))
+                .style("top", from.element.style("top"))
+                .style("left", from.element.style("left"))
+                .attr("scaling", scaling)
+                .style("transform", `scale(${scaling})`);
+
+            // Remove the from tree from the rendering area while
+            // adding the new one.
+            from.element.remove();
+            d3.select("#tree-render-area")
+                .append(() => to.element.node());
+        }
     }
 
-    // ShowPauseButton makes the pause button visible while hiding the play button.
-    function showPauseButton() {
-        d3.select("#button_play")
-            .style("display", "none");
-        d3.select("#button_pause")
-            .style("display", "inline-block");
+    // Play marks the viewer as not in a paused state.
+    function play() {
+        IsPaused    = false;
+        PausedIndex = -1;
+    }
+
+    // Pause setups the paused tree buffer by copying over the current
+    // active tree buffer.
+    function pause() {
+        IsPaused     = true;
+        PausedBuffer = [];
+        PausedIndex  = ActiveBuffer.length - 1;
+
+        for (let tree of ActiveBuffer) {
+            PausedBuffer.push(tree);
+        }
+    }
+
+    // TogglePlayPauseButtons hides or shows the play/pause buttons depending
+    // if the view is paused or not.
+    function togglePlayPause() {
+        if (IsPaused) {
+            d3.select("#button_pause")
+                .style("display", "none");
+            d3.select("#button_play")
+                .style("display", "inline-block");
+        } else {
+            d3.select("#button_play")
+                .style("display", "none");
+            d3.select("#button_pause")
+                .style("display", "inline-block");
+        }
     }
 
     // SetupTrees resets the tree toggle panel to allow the given trees
@@ -293,6 +399,8 @@
                             }
                         } else {
                             tree.element = createDisplay(tree);
+                            tree.element.style("display", "block");
+
                             d3.select("#tree-render-area")
                                 .append(() => tree.element.node());
                         }
@@ -308,6 +416,26 @@
                 label.each(function() {
                     componentHandler.upgradeElement(d3.select(this).node());
                 });
+
+                // After upgrading components we set the is-checked class in
+                // case the tree element was rendered in one set of trees while
+                // also belonging to another set of trees and the user switched
+                // to that new set.  This can be done by clicking on either of
+                // the prev or next buttons to view other trees in history.  Since
+                // there is a new set of trees we can assume the tree navigation
+                // will be wiped; however, the new set may have been one that was
+                // viewed previously and since it is now viewed again we would
+                // like to restore its previous state.
+                label.classed("is-checked", tree => {
+                    if (tree.element) {
+                        let s = tree.element.style("display");
+                        if (s == "block") {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+
 
                 return entry;
             });
