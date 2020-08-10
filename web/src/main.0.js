@@ -3,7 +3,7 @@
         {
             "name": "gather",
             "params": ["*room"],
-            "args": ["sim"],
+            "args": ["r0"],
             "id": 47,
             "result": 0,
             "max_arg_length": 24,
@@ -214,8 +214,16 @@
         PausedIndex  = -1,
         IsPaused     = false;
 
-    debugTrees.push(JSON.parse(JSON.stringify(debugTrees[0])));
-    debugTrees.push(JSON.parse(JSON.stringify(debugTrees[0])));
+    {
+        let tree1 = JSON.parse(JSON.stringify(debugTrees[0])),
+            tree2 = JSON.parse(JSON.stringify(debugTrees[0]));
+
+        tree1.args[0] = "r1";
+        tree2.args[0] = "r2";
+
+        debugTrees.push(tree1);
+        debugTrees.push(tree2);
+    }
 
     ActiveBuffer.push(JSON.parse(JSON.stringify(debugTrees)));
     ActiveBuffer.push(JSON.parse(JSON.stringify(debugTrees)));
@@ -292,31 +300,38 @@
     // trees nodes or other properties.
     function copyView(fromTrees, toTrees) {
 
-        // Helper function to see if two arrays are equal.
-        function arraysMatch(left, right) {
-            if (left && right) {
-                if (left.length != right.length) {
-                    return false;
+        // Helper function to compute the unique identifier of a tree.
+        function treeId(tree) {
+            let id = tree.name;
+            if (Array.isArray(tree.params)) {
+                for (let p of tree.params) {
+                    id += `:${p}`;
                 }
-                for (let i = 0; i < left; i++) {
-                    if (left[i] != right[i]) {
-                        return false;
-                    }
-                }
-                return true;
             }
-            return false;
+            if (Array.isArray(tree.args)) {
+                for (let a of tree.args) {
+                    id += `:${a}`;
+                }
+            }
+            return id;
         }
 
-        for (let i = 0; i < fromTrees.length; i++) {
-            let from = fromTrees[i],
-                to    = toTrees[i];
+        let toTable = {};
+        for (let to of toTrees) {
+            toTable[treeId(to)] = to;
+        }
 
-            if (!from.element)                        continue;
-            if (from.name != to.name)                 continue;
-            if (!arraysMatch(from.params, to.params)) continue;
-            if (!arraysMatch(from.args, to.args))     continue;
+        for (let from of fromTrees) {
+            if (!from.element) {
+                continue;
+            }
 
+            let id = treeId(from),
+                to = toTable[id];
+
+            if (!to) {
+                continue;
+            }
             if (!to.element) {
                 to.element = createDisplay(to);
             }
