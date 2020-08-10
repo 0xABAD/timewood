@@ -319,7 +319,7 @@
         }
 
         for (let i = 0; i < RingBuffer.length; i++) {
-            let idx = (i + RingBufferIndex) % MAX_RING_BUFFER_SIZE;
+            let idx = (i + RingBufferIndex + 1) % MAX_RING_BUFFER_SIZE;
             PausedBuffer.push(RingBuffer[idx]);
         }
     }
