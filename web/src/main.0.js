@@ -242,7 +242,7 @@
                 PausedIndex--;
                 copyView(prev, PausedBuffer[PausedIndex]);
                 setupTrees(PausedBuffer[PausedIndex]);
-                console.log(`[PREV] Viewing tree ${PausedIndex + 1} of ${PausedBuffer.length}`);
+                setHistory(PausedBuffer, PausedIndex);
             }
         });
 
@@ -257,7 +257,7 @@
                 PausedIndex++;
                 copyView(prev, PausedBuffer[PausedIndex]);
                 setupTrees(PausedBuffer[PausedIndex]);
-                console.log(`[NEXT] Viewing tree ${PausedIndex + 1} of ${PausedBuffer.length}`);
+                setHistory(PausedBuffer, PausedIndex);
             }
         });
 
@@ -269,13 +269,13 @@
             }
             play();
             togglePlayPause();
+            clearHistory();
             if (ActiveBuffer.length > 0) {
                 let curr = ActiveBuffer[ActiveBuffer.length - 1];
                 if (prev) {
                     copyView(prev, curr);
                 }
                 setupTrees(curr);
-                console.log(`[PLAY] Viewing tree ${ActiveBuffer.length - 1} of ${ActiveBuffer.length}`);
             }
         });
 
@@ -283,7 +283,7 @@
         .on("click", function() {
             pause();
             togglePlayPause();
-            console.log(`[PAUSE] Viewing tree ${PausedIndex + 1} of ${PausedBuffer.length}`);
+            setHistory(PausedBuffer, PausedIndex);
         });
 
     window.gooey.OnMessage = function(msg) {
@@ -291,6 +291,15 @@
         let elt = document.getElementById('gooey-message-area');
         elt.innerText = msg;
     };
+
+    function clearHistory() {
+        d3.select("#history_index").text("");
+    }
+
+    function setHistory(buffer, index) {
+        d3.select("#history_index")
+            .text(`Tree History: ${index + 1} of ${buffer.length}`);
+    }
 
     // CopyView copies over the user interaction visual changes
     // (e.g. panning and zooming) and whether certain trees are
