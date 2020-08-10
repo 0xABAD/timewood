@@ -318,6 +318,10 @@
             return;
         }
 
+        // Add all the trees from the ring buffer to the paused buffer
+        // starting from the next tree set that will be evicted from
+        // the ring buffer.  This places the most recent tree placed
+        // in the ring buffer at the end of the paused buffer.
         for (let i = 0; i < RingBuffer.length; i++) {
             let idx = (i + RingBufferIndex + 1) % MAX_RING_BUFFER_SIZE;
             PausedBuffer.push(RingBuffer[idx]);
