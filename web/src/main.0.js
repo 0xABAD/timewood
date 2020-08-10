@@ -206,30 +206,45 @@
         }
     ];
 
-    const TREE_WIDTH           = 400,
-          MAX_RING_BUFFER_SIZE = 3;
-
-    let ActiveBuffer = [],
-        PausedBuffer = [],
-        PausedIndex  = -1,
-        IsPaused     = false;
-
+    // Temp code to create multiple trees.
     {
         let tree1 = JSON.parse(JSON.stringify(debugTrees[0])),
             tree2 = JSON.parse(JSON.stringify(debugTrees[0]));
 
         tree1.args[0] = "r1";
         tree2.args[0] = "r2";
-
         debugTrees.push(tree1);
         debugTrees.push(tree2);
     }
 
-    ActiveBuffer.push(JSON.parse(JSON.stringify(debugTrees)));
-    ActiveBuffer.push(JSON.parse(JSON.stringify(debugTrees)));
-    ActiveBuffer.push(JSON.parse(JSON.stringify(debugTrees)));
+    const TREE_WIDTH           = 400,
+          MAX_RING_BUFFER_SIZE = 5;
 
-    setupTrees(ActiveBuffer[2]);
+    let RingBuffer      = [],
+        RingBufferIndex = -1,
+        PausedBuffer    = [],
+        PausedIndex     = -1,
+        IsPaused        = false,
+        TreeTick        = 0;
+
+    window.setInterval(function() {
+        let trees = JSON.parse(JSON.stringify(debugTrees)),
+            prev  = undefined;
+
+        if (RingBufferIndex != -1) {
+            prev = RingBuffer[RingBufferIndex];
+        }
+
+        appendTrees(trees);
+        if (IsPaused) {
+            return;
+        }
+
+        if (prev) {
+            copyView(prev, RingBuffer[RingBufferIndex]);
+        }
+        setupTrees(RingBuffer[RingBufferIndex]);
+    }, 2000);
 
     d3.select("#button_previous")
         .on("click", function() {
@@ -270,8 +285,8 @@
             play();
             togglePlayPause();
             clearHistory();
-            if (ActiveBuffer.length > 0) {
-                let curr = ActiveBuffer[ActiveBuffer.length - 1];
+            if (RingBufferIndex != -1) {
+                let curr = RingBuffer[RingBufferIndex];
                 if (prev) {
                     copyView(prev, curr);
                 }
@@ -286,11 +301,44 @@
             setHistory(PausedBuffer, PausedIndex);
         });
 
-    window.gooey.OnMessage = function(msg) {
-        // Check we can act on gooey messages.
-        let elt = document.getElementById('gooey-message-area');
-        elt.innerText = msg;
-    };
+    // Play marks the viewer as not in a paused state.
+    function play() {
+        IsPaused    = false;
+        PausedIndex = -1;
+    }
+
+    // Pause setups the paused tree buffer by copying over the current
+    // active tree buffer.
+    function pause() {
+        IsPaused     = true;
+        PausedBuffer = [];
+        PausedIndex  = RingBuffer.length - 1;
+
+        if (PausedIndex == -1) {
+            return;
+        }
+
+        for (let i = 0; i < RingBuffer.length; i++) {
+            let idx = (i + RingBufferIndex) % MAX_RING_BUFFER_SIZE;
+            PausedBuffer.push(RingBuffer[idx]);
+        }
+    }
+
+    // AppendTrees adds trees to RingBuffer and updates the page's
+    // tree tick.
+    function appendTrees(trees) {
+        if (RingBuffer.length < MAX_RING_BUFFER_SIZE) {
+            RingBuffer.push(trees);
+            RingBufferIndex++;
+        } else {
+            RingBufferIndex = (RingBufferIndex + 1) % MAX_RING_BUFFER_SIZE;
+            RingBuffer[RingBufferIndex] = trees;
+        }
+
+        TreeTick++;
+        d3.select("#tree_tick_update")
+            .text(`Tree Tick: ${TreeTick}`);
+    }
 
     function clearHistory() {
         d3.select("#history_index").text("");
@@ -358,24 +406,6 @@
             from.element.remove();
             d3.select("#tree-render-area")
                 .append(() => to.element.node());
-        }
-    }
-
-    // Play marks the viewer as not in a paused state.
-    function play() {
-        IsPaused    = false;
-        PausedIndex = -1;
-    }
-
-    // Pause setups the paused tree buffer by copying over the current
-    // active tree buffer.
-    function pause() {
-        IsPaused     = true;
-        PausedBuffer = [];
-        PausedIndex  = ActiveBuffer.length - 1;
-
-        for (let tree of ActiveBuffer) {
-            PausedBuffer.push(tree);
         }
     }
 
@@ -784,6 +814,10 @@
 
         return svg;
     }
+
+    window.gooey.OnMessage = function(msg) {
+        // Process message
+    };
 
     // Reset MDL framework in case of hot-reload.
     let header = document.getElementById('main-header');
