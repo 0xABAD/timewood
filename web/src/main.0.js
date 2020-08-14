@@ -251,7 +251,7 @@
         if (prev) {
             copyView(prev.trees, curr.trees);
         }
-        setupTrees(curr);
+        setupView(curr);
     }, 2000);
 
     d3.select("#button_previous")
@@ -264,7 +264,7 @@
                 let prev = PausedBuffer[PausedIndex];
                 PausedIndex--;
                 copyView(prev.trees, PausedBuffer[PausedIndex].trees);
-                setupTrees(PausedBuffer[PausedIndex]);
+                setupView(PausedBuffer[PausedIndex]);
                 setHistory(PausedBuffer, PausedIndex);
             }
         });
@@ -279,7 +279,7 @@
                 let prev = PausedBuffer[PausedIndex];
                 PausedIndex++;
                 copyView(prev.trees, PausedBuffer[PausedIndex].trees);
-                setupTrees(PausedBuffer[PausedIndex]);
+                setupView(PausedBuffer[PausedIndex]);
                 setHistory(PausedBuffer, PausedIndex);
             }
         });
@@ -298,7 +298,7 @@
                 if (prev) {
                     copyView(prev.trees, curr.trees);
                 }
-                setupTrees(curr);
+                setupView(curr);
             }
         });
 
@@ -437,9 +437,9 @@
         }
     }
 
-    // SetupTrees resets the tree toggle panel to allow the given trees
+    // SetupView resets the tree toggle panel to allow the given trees
     // within be togglable for visualization.
-    function setupTrees(content) {
+    function setupView(content) {
         let nav = d3.select("#tree-selection")
             .html('')
             .selectAll("a")
