@@ -290,10 +290,12 @@
             if (PausedIndex > -1) {
                 prev = PausedBuffer[PausedIndex];
             }
-            play();
+            IsPaused    = false;
+            PausedIndex = -1;
+
             togglePlayPause();
             clearHistory();
-            if (RingBufferIndex != -1) {
+            if (RingBufferIndex > -1) {
                 let curr = RingBuffer[RingBufferIndex];
                 if (prev) {
                     copyView(prev.trees, curr.trees);
@@ -321,12 +323,6 @@
             }
         });
 
-    // Play marks the viewer as not in a paused state.
-    function play() {
-        IsPaused    = false;
-        PausedIndex = -1;
-    }
-
     // Pause setups the paused tree buffer by copying over the current
     // active tree buffer.
     function pause() {
@@ -343,7 +339,15 @@
         // the ring buffer.  This places the most recent tree placed
         // in the ring buffer at the end of the paused buffer.
         for (let i = 0; i < RingBuffer.length; i++) {
-            let idx = (i + RingBufferIndex + 1) % MAX_RING_BUFFER_SIZE;
+            let idx = i;
+            // When the ring buffer is not filled up we only want to
+            // copy from the front of the ring buffer to its last element.
+            // If we were to set idx in this `if` statement if the ring
+            // buffer was not filled then we could end up pusing an
+            // element that doesn't exist yet.
+            if (RingBuffer.length == MAX_RING_BUFFER_SIZE) {
+                idx = (i + RingBufferIndex + 1) % MAX_RING_BUFFER_SIZE;
+            }
             PausedBuffer.push(RingBuffer[idx]);
         }
     }
