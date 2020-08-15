@@ -13,6 +13,7 @@ const INDEX = `
 <style>
   .mdl-layout__drawer.is-visible { width: 35vw; }
   .control-button { transform: scale(0.8); }
+  .meta-area { position: abosulte; z-index: 100; display: none; }
 </style>
 <script>
 (function(){var e=window.location.origin.substring(7),d=new WebSocket("ws://"+e+"/gooeywebsocket"),a=void 0;window.hasOwnProperty("gooey")?a=window.gooey:(a={},window.gooey=a,a.OnMessage=function(a){console.log(a)},a.Send=function(a){1===d.readyState?d.send(JSON.stringify(a)):console.error("[GOOEY] Websocket connection is not open.")},a.IsDisconnected=!1,a.OnOpen=function(){console.log("[GOOEY] Websocket connection is open.")},a.OnDisconnect=function(){console.error("[GOOEY] Disconnected from server.")},

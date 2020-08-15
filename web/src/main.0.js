@@ -309,6 +309,18 @@
             setHistory(PausedBuffer, PausedIndex);
         });
 
+    d3.select("#button_meta")
+        .on("click", function() {
+            let area    = d3.select("#meta-data-area"),
+                display = area.style("display");
+
+            if (display == "none") {
+                area.style("display", "block");
+            } else {
+                area.style("display", "none");
+            }
+        });
+
     // Play marks the viewer as not in a paused state.
     function play() {
         IsPaused    = false;

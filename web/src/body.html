@@ -22,9 +22,14 @@
       </div>
 
       <!-- Tree Info -->
-      <div style="width: 200px">
-        <div id="tree_tick_update">Tree Tick: 0</div>
-        <div id="history_index"></div>
+      <div style="display: flex; flex-direction: row">
+        <div style="width: 200px">
+          <div id="tree_tick_update">Tree Tick: 0</div>
+          <div id="history_index"></div>
+        </div>
+        <button id="button_meta" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored control-button">
+          <i class="material-icons">speaker_notes</i>
+        </button>
       </div>
     </div>
   </header>
@@ -35,6 +40,7 @@
   <main class="mdl-layout__content">
     <div class="page-content">
       <div id="tree-render-area"></div>
+      <div id="meta-data-area" class="meta-area"></div>
     </div>
   </main>
 </div>
