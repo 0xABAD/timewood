@@ -11,7 +11,7 @@ import (
 	"github.com/0xABAD/gooey"
 )
 
-const DEBUG = true
+const DEBUG = false
 
 func main() {
 	var (
