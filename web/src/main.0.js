@@ -1,231 +1,6 @@
 (function() {
-    const debugTrees = {
-        "meta": {
-            "foo": 2,
-            "bar": 3,
-            "quux": "baz",
-        },
-        "trees": [
-            {
-                "name": "gather",
-                "params": ["*room"],
-                "args": ["r0"],
-                "id": 47,
-                "result": 0,
-                "max_arg_length": 24,
-                "long_arg_trunc": 6,
-                "root": {
-                    "name": "⇶",
-                    "result": 0,
-                    "args": [2],
-                    "id": 47,
-                    "children": [
-                        {
-                            "name": "?",
-                            "result": 0,
-                            "id": 47,
-                            "children": [
-                                {
-                                    "name": "Room Max Level",
-                                    "params": ["*room"],
-                                    "args": ["sim"],
-                                    "result": 0,
-                                    "id": 47
-                                },
-                                {
-                                    "name": "➝",
-                                    "result": 0,
-                                    "id": 47,
-                                    "children": [
-                                        {
-                                            "name": "Carry Creep Available",
-                                            "params": ["?creep", "*room"],
-                                            "args": ["76d162e718c9f1ab51413dfc", "sim"],
-                                            "result": 1,
-                                            "id": 47
-                                        },
-                                        {
-                                            "name": "!",
-                                            "result": 0,
-                                            "id": 47,
-                                            "children": [
-                                                {
-                                                    "name": "Creep Energy Full",
-                                                    "params": ["*creep"],
-                                                    "args": ["76d162e718c9f1ab51413dfc"],
-                                                    "result": 1,
-                                                    "id": 47
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "name": "Spawn Energy Near Full",
-                                            "params": ["?spawn"],
-                                            "args": ["?spawn"],
-                                            "result": -1,
-                                            "id": -1
-                                        },
-                                        {
-                                            "name": "Creep Collect Energy",
-                                            "params": ["*creep", "*spawn"],
-                                            "args": ["*creep", "*spawn"],
-                                            "result": -1,
-                                            "id": -1,
-                                            "isAction": true
-                                        }
-                                    ]
-                                },
-                                {
-                                    "name": "➝",
-                                    "result": 0,
-                                    "id": 47,
-                                    "children": [
-                                        {
-                                            "name": "Have Creep With Energy",
-                                            "params": ["?creep", "*room"],
-                                            "args": ["76d162e718c9f1ab51413dfc", "sim"],
-                                            "result": 1,
-                                            "id": 47
-                                        },
-                                        {
-                                            "name": "Spawn Energy Near Full",
-                                            "params": ["?spawn", "*room"],
-                                            "args": ["988056402dad25aba66e5af5", "sim"],
-                                            "result": 0,
-                                            "id": 47
-                                        },
-                                        {
-                                            "name": "Upgrade Room",
-                                            "params": ["*creep", "*room"],
-                                            "args": ["*creep", "*room"],
-                                            "result": -1,
-                                            "id": -1,
-                                            "isAction": true
-                                        }
-                                    ]
-                                },
-                                {
-                                    "name": "➝",
-                                    "result": 0,
-                                    "id": 47,
-                                    "children": [
-                                        {
-                                            "name": "Spawn Energy Full",
-                                            "params": ["?spawn", "*room"],
-                                            "args": ["988056402dad25aba66e5af5", "sim"],
-                                            "result": 0,
-                                            "id": 47
-                                        },
-                                        {
-                                            "name": "Build Creep",
-                                            "params": ["*spawn"],
-                                            "args": ["*spawn"],
-                                            "result": -1,
-                                            "id": -1,
-                                            "isAction": true
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "name": "?",
-                            "result": 1,
-                            "id": 47,
-                            "children": [
-                                {
-                                    "name": "Spawn Energy Full",
-                                    "params": ["?spawn", "*room"],
-                                    "args": ["988056402dad25aba66e5af5", "sim"],
-                                    "result": 0,
-                                    "id": 47
-                                },
-                                {
-                                    "name": "➝",
-                                    "result": 0,
-                                    "id": 47,
-                                    "children": [
-                                        {
-                                            "name": "Source Has Energy",
-                                            "params": ["?source", "*room"],
-                                            "args": ["7edd613592480bac57da3d7f", "sim"],
-                                            "result": 1,
-                                            "id": 47
-                                        },
-                                        {
-                                            "name": "Work Creep Available",
-                                            "params": ["?creep", "*room"],
-                                            "args": ["76d162e718c9f1ab51413dfc", "sim"],
-                                            "result": 1,
-                                            "id": 47
-                                        },
-                                        {
-                                            "name": "!",
-                                            "result": 0,
-                                            "id": 47,
-                                            "children": [
-                                                {
-                                                    "name": "Creep Energy Full",
-                                                    "params": ["*creep"],
-                                                    "args": ["76d162e718c9f1ab51413dfc"],
-                                                    "result": 1,
-                                                    "id": 47
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "name": "Harvest Energy",
-                                            "params": ["*creep", "*source"],
-                                            "args": ["*creep", "*source"],
-                                            "result": -1,
-                                            "id": -1,
-                                            "isAction": true
-                                        }
-                                    ]
-                                },
-                                {
-                                    "name": "➝",
-                                    "result": 1,
-                                    "id": 47,
-                                    "children": [
-                                        {
-                                            "name": "Have Creep With Energy",
-                                            "params": ["?creep", "*room"],
-                                            "args": ["76d162e718c9f1ab51413dfc", "sim"],
-                                            "result": 1,
-                                            "id": 47
-                                        },
-                                        {
-                                            "name": "Transfer Energy To Spawn",
-                                            "params": ["*creep", "*spawn"],
-                                            "args": ["76d162e718c9f1ab51413dfc", "988056402dad25aba66e5af5"],
-                                            "result": 1,
-                                            "id": 47,
-                                            "isAction": true
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        ]
-    };
-
-    // Temp code to create multiple trees.
-    {
-        let tree1 = JSON.parse(JSON.stringify(debugTrees.trees[0])),
-            tree2 = JSON.parse(JSON.stringify(debugTrees.trees[0]));
-
-        tree1.args[0] = "r1";
-        tree2.args[0] = "r2";
-        debugTrees.trees.push(tree1);
-        debugTrees.trees.push(tree2);
-    }
-
     const TREE_WIDTH           = 400,
-          MAX_RING_BUFFER_SIZE = 5;
+          MAX_RING_BUFFER_SIZE = 120;
 
     let RingBuffer      = [],
         RingBufferIndex = -1,
@@ -233,26 +8,6 @@
         PausedIndex     = -1,
         IsPaused        = false,
         TreeTick        = 0;
-
-    window.setInterval(function() {
-        let trees = JSON.parse(JSON.stringify(debugTrees)),
-            prev  = undefined;
-
-        if (RingBufferIndex != -1) {
-            prev = RingBuffer[RingBufferIndex];
-        }
-
-        appendTrees(trees);
-        if (IsPaused) {
-            return;
-        }
-
-        let curr = RingBuffer[RingBufferIndex];
-        if (prev) {
-            copyView(prev.trees, curr.trees);
-        }
-        setupView(curr);
-    }, 2000);
 
     d3.select("#button_previous")
         .on("click", function() {
@@ -870,6 +625,23 @@
 
     window.gooey.OnMessage = function(msg) {
         // Process message
+        let trees = JSON.parse(msg),
+            prev  = undefined;
+
+        if (RingBufferIndex != -1) {
+            prev = RingBuffer[RingBufferIndex];
+        }
+
+        appendTrees(trees);
+        if (IsPaused) {
+            return;
+        }
+
+        let curr = RingBuffer[RingBufferIndex];
+        if (prev) {
+            copyView(prev.trees, curr.trees);
+        }
+        setupView(curr);
     };
 
     // Reset MDL framework in case of hot-reload.
