@@ -437,7 +437,7 @@
         }
     }
 
-    // TogglePlayPauseButtons hides or shows the play/pause buttons depending
+    // TogglePlayPause hides or shows the play/pause buttons depending
     // if the view is paused or not.
     function togglePlayPause() {
         if (IsPaused) {
@@ -456,6 +456,31 @@
     // SetupView resets the tree toggle panel to allow the given trees
     // within be togglable for visualization.
     function setupView(content) {
+        let meta = d3.select("#meta-data-area")
+            .html('')
+            .call(d3.drag()
+                  .on("drag", function() {
+                    let evt  = d3.event,
+                        node = meta.node(),
+                        top  = parseInt(meta.style("top")),
+                        left = parseInt(meta.style("left"));
+
+                    meta.attr("draggable", true)
+                        .style("top", top + evt.dy + "px")
+                        .style("left", left + evt.dx + "px");
+                  }));
+
+        for (let item in content.meta) {
+            let div = meta.append("div")
+                .classed("meta-element", true);
+
+            div.append("span").text(item);
+
+            div.append("span")
+                .style("margin-left", "10px")
+                .text(content.meta[item]);
+        }
+
         let nav = d3.select("#tree-selection")
             .html('')
             .selectAll("a")
